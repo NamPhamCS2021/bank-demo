@@ -34,7 +34,7 @@ class DataPopulationService {
     private final AlertRepository alertRepository;
     private final PeriodicalPaymentRepository periodicalPaymentRepository;
     private final AccountStatusHistoryRepository accountStatusHistoryRepository;
-    private final PeriodicalReportRepository periodicalReportRepository;
+    private final ReportRepository reportRepository;
     private final PasswordEncoder passwordEncoder;
 
     private final Faker faker = new Faker();
@@ -224,7 +224,7 @@ class DataPopulationService {
     @Transactional
     public void createPeriodicalReports(int count) {
         for (int i = 0; i < count; i++) {
-            PeriodicalReport report = new PeriodicalReport();
+            Report report = new Report();
 
             report.setNumberOfTransactions((long) faker.number().numberBetween(100, 1000));
             report.setTotalAmount(new BigDecimal(faker.number().numberBetween(10000, 100000)));
@@ -241,7 +241,7 @@ class DataPopulationService {
             report.setEndAt(startDate.plusDays(7)); // Week-long reports
             // timestamp will be set by @PrePersist
 
-            periodicalReportRepository.save(report);
+            reportRepository.save(report);
         }
     }
 
@@ -268,7 +268,7 @@ class DataPopulationService {
         accountRepository.deleteAll();
         customerRepository.deleteAll();
         userRepository.deleteAll();
-        periodicalReportRepository.deleteAll();
+        reportRepository.deleteAll();
 
         System.out.println("All data cleared!");
     }

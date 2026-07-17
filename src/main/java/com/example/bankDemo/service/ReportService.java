@@ -1,6 +1,5 @@
 package com.example.bankDemo.service;
 
-import com.example.bankDemo.entity.PeriodicalReport;
 import com.example.bankDemo.entity.Report;
 import com.example.bankDemo.enums.ExportFormat;
 import com.example.bankDemo.enums.ReportPeriod;
