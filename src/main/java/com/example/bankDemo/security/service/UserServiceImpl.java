@@ -7,7 +7,9 @@ import com.example.bankDemo.security.entity.User;
 import com.example.bankDemo.security.model.PassChangRequest;
 import com.example.bankDemo.security.model.UserDTO;
 import com.example.bankDemo.security.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -15,8 +17,12 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
-    public UserServiceImpl(UserRepository userRepository) {
+
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -50,11 +56,11 @@ public class UserServiceImpl implements UserService{
             return new ApiResponse<>(ReturnMessage.NOT_FOUND.getCode(), ReturnMessage.NOT_FOUND.getMessage());
         }
         User user = optionalUser.get();
-        if (!user.getPassword().equals(passChangRequest.getCurrentPassword())){
+        if (!passwordEncoder.matches(passChangRequest.getCurrentPassword(), user.getPassword())){
             return new ApiResponse<>(ReturnMessage.WRONG_PASSWORD.getCode(), ReturnMessage.WRONG_PASSWORD.getMessage());
         }
         else{
-            user.setPassword(passChangRequest.getNewPassword());
+            user.setPassword(passwordEncoder.encode(passChangRequest.getNewPassword()));
             UserDTO userDTO = new UserDTO(user.getUsername(),user.getRole(),user.getCustomer().getCreatedDate());
             userRepository.save(user);
             return new ApiResponse<>(userDTO, ReturnMessage.SUCCESS.getCode(), ReturnMessage.SUCCESS.getMessage());

@@ -125,7 +125,7 @@ public class ReportController {
         writeTrendReport(response, period, ExportFormat.PDF);
     }
 
-    // ---------- helpers dùng chung: set header HTTP rồi giao phần nội dung file cho service ----------
+    //helpers
 
     private void writeReport(HttpServletResponse response, Map<String, Object> reportMap, ExportFormat format, String filenamePrefix) {
         try {

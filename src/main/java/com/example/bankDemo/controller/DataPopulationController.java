@@ -34,7 +34,7 @@ class DataPopulationService {
     private final AlertRepository alertRepository;
     private final PeriodicalPaymentRepository periodicalPaymentRepository;
     private final AccountStatusHistoryRepository accountStatusHistoryRepository;
-    private final ReportRepository reportRepository;
+    private final ReportRepository periodicalReportRepository;
     private final PasswordEncoder passwordEncoder;
 
     private final Faker faker = new Faker();
@@ -226,6 +226,10 @@ class DataPopulationService {
         for (int i = 0; i < count; i++) {
             Report report = new Report();
 
+            // Level 3, mục 1: mỗi report giả lập cần có period (WEEKLY/QUARTERLY/YEARLY)
+            // vì đây giờ là cột NOT NULL trên PeriodicalReport.
+            report.setPeriod(ReportPeriod.values()[random.nextInt(ReportPeriod.values().length)]);
+
             report.setNumberOfTransactions((long) faker.number().numberBetween(100, 1000));
             report.setTotalAmount(new BigDecimal(faker.number().numberBetween(10000, 100000)));
             report.setAverageAmount(new BigDecimal(faker.number().numberBetween(50, 500)));
@@ -239,9 +243,9 @@ class DataPopulationService {
                     .toLocalDateTime();
             report.setStartAt(startDate);
             report.setEndAt(startDate.plusDays(7)); // Week-long reports
-            // timestamp will be set by @PrePersist
+            // publicId and timestamp will be set by @PrePersist
 
-            reportRepository.save(report);
+            periodicalReportRepository.save(report);
         }
     }
 
@@ -268,7 +272,7 @@ class DataPopulationService {
         accountRepository.deleteAll();
         customerRepository.deleteAll();
         userRepository.deleteAll();
-        reportRepository.deleteAll();
+        periodicalReportRepository.deleteAll();
 
         System.out.println("All data cleared!");
     }

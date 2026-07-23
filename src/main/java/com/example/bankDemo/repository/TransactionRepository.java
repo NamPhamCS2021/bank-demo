@@ -25,10 +25,16 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
     Page<Transaction> findByType(TransactionType type, Pageable pageable);
     Page<Transaction> findByAccountIdAndType(Long accountId, TransactionType type, Pageable pageable);
     //Page<Transaction> findByReceiverId(Long receiverId, Pageable pageable);
+    @Query("SELECT t.id FROM Transaction t WHERE t.checked = false")
+    List<Long> findIdsByCheckedFalse();
+    @Query("SELECT t FROM Transaction t JOIN FETCH t.account WHERE t.id = :id")
+    Optional<Transaction> findByIdWithAccount(@Param("id") Long id);
     @Query("SELECT t.location AS location, COUNT(t) AS count FROM Transaction t GROUP BY t.location")
     List<LocationCount> countTransactionsByLocation();
     @Query("SELECT t FROM Transaction t WHERE t.checked = false")
     List<Transaction> findByCheckedFalse();
+    @Query("SELECT t FROM Transaction t JOIN FETCH t.account WHERE t.checked = false")
+    List<Transaction> findByCheckedFalseWithAccount();
     @Query("SELECT t from Transaction t WHERE t.publicId = :publicId")
     Optional<Transaction> findByPublicId(@Param("publicId") UUID publicId);
     @Query("SELECT SUM(t.amount) FROM Transaction t WHERE t.createdAt BETWEEN :start AND :end")

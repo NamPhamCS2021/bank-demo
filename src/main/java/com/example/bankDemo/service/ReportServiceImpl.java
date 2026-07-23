@@ -81,8 +81,6 @@ public class ReportServiceImpl implements ReportService {
 
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new EntityNotFoundException("Can not find account with account number: " + accountNumber));
-        // account.getId() (khóa chính nội bộ) chỉ dùng để join/truy vấn hiệu quả trong nội bộ
-        // service - không lộ ra ngoài API, người gọi chỉ thấy accountNumber.
         Long accountId = account.getId();
         String customerName = account.getCustomer().getFirstName() + " " + account.getCustomer().getLastName();
         BigDecimal balance = account.getBalance();
@@ -163,7 +161,6 @@ public class ReportServiceImpl implements ReportService {
     @Transactional(readOnly = true)
     public List<Report> getRecentPeriodicalReportsForTrend(ReportPeriod period) {
         List<Report> reports = reportRepository.findTop24ByPeriodOrderByStartAtDesc(period);
-        // đảo lại thành thứ tự thời gian tăng dần để biểu đồ xu hướng đọc từ trái qua phải cho đúng
         java.util.Collections.reverse(reports);
         return reports;
     }

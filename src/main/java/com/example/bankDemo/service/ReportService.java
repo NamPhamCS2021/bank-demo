@@ -20,25 +20,15 @@ public interface ReportService {
 
     Map<String, Object> generateAccountReport(LocalDateTime start, LocalDateTime end);
 
-    /**
-     * Sinh báo cáo cho một chu kỳ (tuần/quý/năm) và LƯU LẠI thành một
-     * PeriodicalReport để tra cứu lịch sử và vẽ xu hướng sau này.
-     */
+
     Map<String, Object> generatePeriodicalReport(ReportPeriod period, LocalDateTime start, LocalDateTime end);
 
     Page<Report> getPeriodicalReportHistory(ReportPeriod period, Pageable pageable);
 
-    /** Các kỳ báo cáo gần nhất, theo thứ tự thời gian tăng dần - dùng để vẽ biểu đồ xu hướng. */
     List<Report> getRecentPeriodicalReportsForTrend(ReportPeriod period);
 
-    /**
-     * Ghi một báo cáo dạng key/value ra outputStream theo định dạng chỉ định.
-     * Nhận một OutputStream thuần (không phải HttpServletResponse) để không ràng
-     * buộc service vào servlet API - controller chịu trách nhiệm set header HTTP,
-     * service chỉ lo phần nội dung file.
-     */
+
     void exportReport(Map<String, Object> reportData, ExportFormat format, OutputStream outputStream) throws IOException;
 
-    /** Ghi báo cáo xu hướng (kèm biểu đồ) của một chu kỳ ra outputStream theo định dạng chỉ định. */
     void exportTrendReport(ReportPeriod period, ExportFormat format, OutputStream outputStream) throws IOException;
 }
