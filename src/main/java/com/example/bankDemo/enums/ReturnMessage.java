@@ -15,7 +15,8 @@ public enum ReturnMessage {
     OFF_LIMIT("06", "Limit exceeded"),
     ALREADY_EXISTED("07", "Mail or phone is already registered"),
     NULL_VALUE("08", "Null value"),
-    INVALID_ARGUMENTS("09", "Invalid arguments");
+    INVALID_ARGUMENTS("09", "Invalid arguments"),
+    WRONG_PASSWORD("10", "PASSWORD is Incorrect");
     private final String code;
     private final String message;
 }

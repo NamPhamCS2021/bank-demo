@@ -2,9 +2,11 @@ package com.example.bankDemo.security.controller;
 
 import com.example.bankDemo.dto.ApiResponse;
 import com.example.bankDemo.security.model.AuthRequest;
+import com.example.bankDemo.security.model.PassChangRequest;
 import com.example.bankDemo.security.service.AuthService;
 import com.example.bankDemo.security.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -12,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
 
 @RequestMapping("/api/auth")
@@ -70,6 +71,10 @@ public class AuthController {
                 "resultCode", "00",
                 "resultMessage", "Logged out successfully"
         ));
+    }
+    @PostMapping("/changePassword/{username}")
+    public ApiResponse<Object> changePassword(@PathVariable String username, @Valid @RequestBody PassChangRequest passChangRequest) {
+        return userService.changePassword(username, passChangRequest);
     }
 
 }
